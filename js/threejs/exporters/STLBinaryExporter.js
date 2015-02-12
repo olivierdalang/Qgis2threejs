@@ -10,12 +10,10 @@ THREE.STLBinaryExporter.prototype = {
 
 	constructor: THREE.STLBinaryExporter,
 
-	parse: ( function () {
+	parse: ( function ( scene ) {
 
-		var vector = new THREE.Vector3();
-		var normalMatrixWorld = new THREE.Matrix3();
-
-		return function ( scene ) {
+			var vector = new THREE.Vector3();
+			var normalMatrixWorld = new THREE.Matrix3();
 
 			var triangles = 0;
 			scene.traverse( function ( object ) {
@@ -69,11 +67,9 @@ THREE.STLBinaryExporter.prototype = {
 				}
 
 			} );
-			
-			return output;
 
-		};
+			return output.buffer;
 
-	}() )
+		} )
 
 };

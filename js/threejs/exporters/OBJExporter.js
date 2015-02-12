@@ -3,11 +3,11 @@
  * @author mrdoob / http://mrdoob.com/
  */
  
-THREE.STLExporter = function () {};
+THREE.OBJExporter = function () {};
 
-THREE.STLExporter.prototype = {
+THREE.OBJExporter.prototype = {
 
-	constructor: THREE.STLExporter,
+	constructor: THREE.OBJExporter,
 
 	parse: ( function ( scene ) {
 
@@ -15,8 +15,8 @@ THREE.STLExporter.prototype = {
 			var normalMatrixWorld = new THREE.Matrix3();
 
 			var output = '';
-
-			output += 'solid exported\n';
+			var v_index = 1;
+			var o_index = 1;
 
 			scene.traverse( function ( object ) {
 
@@ -24,8 +24,15 @@ THREE.STLExporter.prototype = {
 
 					var geometry = object.geometry;
 					var matrixWorld = object.matrixWorld;
+					
+					var material = object.material;
+					var hexString = material.color.getHexString();
 
 					if ( geometry instanceof THREE.Geometry ) {
+
+						output += 'usemtl Mat_' + (hexString) + '\n';
+						output += 'g Object_' + (o_index) + '\n';
+						o_index += 1;
 
 						var vertices = geometry.vertices;
 						var faces = geometry.faces;
@@ -38,8 +45,8 @@ THREE.STLExporter.prototype = {
 
 							vector.copy( face.normal ).applyMatrix3( normalMatrixWorld ).normalize();
 
-							output += '\tfacet normal ' + vector.x + ' ' + vector.y + ' ' + vector.z + '\n';
-							output += '\t\touter loop\n';
+							//output += '\tfacet normal ' + vector.x + ' ' + vector.y + ' ' + vector.z + '\n';
+							//output += '\t\touter loop\n';
 
 							var indices = [ face.a, face.b, face.c ];
 
@@ -47,12 +54,14 @@ THREE.STLExporter.prototype = {
 
 								vector.copy( vertices[ indices[ j ] ] ).applyMatrix4( matrixWorld );
 
-								output += '\t\t\tvertex ' + vector.x + ' ' + vector.y + ' ' + vector.z + '\n';
+								output += 'v ' + vector.x + ' ' + vector.z + ' ' + vector.y + '\n';
 
 							}
+							output += 'f ' + (v_index+2) + ' ' + (v_index+1) + ' ' + (v_index) + '\n';
+							v_index += 3;
 
-							output += '\t\tendloop\n';
-							output += '\tendfacet\n';
+							//output += '\t\tendloop\n';
+							//output += '\tendfacet\n';
 
 						}
 
@@ -62,7 +71,7 @@ THREE.STLExporter.prototype = {
 
 			} );
 
-			output += 'endsolid exported\n';			
+			//output += 'endsolid exported\n';			
 
 			return output;
 
