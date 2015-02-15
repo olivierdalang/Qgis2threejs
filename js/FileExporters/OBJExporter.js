@@ -47,9 +47,6 @@ THREE.OBJExporter.prototype = {
 
 							vector.copy( face.normal ).applyMatrix3( normalMatrixWorld ).normalize();
 
-							//output += '\tfacet normal ' + vector.x + ' ' + vector.y + ' ' + vector.z + '\n';
-							//output += '\t\touter loop\n';
-
 							var indices = [ face.a, face.b, face.c ];
 
 							for ( var j = 0; j < 3; j ++ ) {
@@ -62,18 +59,13 @@ THREE.OBJExporter.prototype = {
 							output += 'f ' + (v_index+2) + ' ' + (v_index+1) + ' ' + (v_index) + '\n';
 							v_index += 3;
 
-							//output += '\t\tendloop\n';
-							//output += '\tendfacet\n';
-
 						}
 
 					}
 
 				}
 
-			} );
-
-			//output += 'endsolid exported\n';			
+			} );	
 
 			return output;
 
