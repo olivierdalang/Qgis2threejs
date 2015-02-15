@@ -114,7 +114,7 @@
          <set>Qt::ImhDigitsOnly</set>
         </property>
         <property name="text">
-         <string>1.5</string>
+         <string>1.0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

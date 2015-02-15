@@ -205,7 +205,7 @@ class WorldPropertyPage(PropertyPage, Ui_WorldPropertiesWidget):
     if not is_number(self.lineEdit_BaseSize.text()):
       p["lineEdit_BaseSize"] = "100"
     if not is_number(self.lineEdit_zFactor.text()):
-      p["lineEdit_zFactor"] = "1.5"
+      p["lineEdit_zFactor"] = "1.0"
     if not is_number(self.lineEdit_zShift.text()):
       p["lineEdit_zShift"] = "0"
     return p
@@ -630,7 +630,7 @@ class VectorPropertyPage(PropertyPage, Ui_VectorPropertiesWidget):
     # create MapTo3d object to calculate default values
     world = self.dialog.properties[ObjectTreeItem.ITEM_WORLD] or {}
     ba = float(world.get("lineEdit_BaseSize", 100))
-    ve = float(world.get("lineEdit_zFactor", 1.5))
+    ve = float(world.get("lineEdit_zFactor", 1.0))
     vs = float(world.get("lineEdit_zShift", 0))
     mapTo3d = MapTo3D(self.dialog.iface.mapCanvas(), ba, ve, vs)
 
@@ -673,7 +673,7 @@ class VectorPropertyPage(PropertyPage, Ui_VectorPropertiesWidget):
     # create MapTo3d object to calculate default values
     world = self.dialog.properties[ObjectTreeItem.ITEM_WORLD] or {}
     bs = float(world.get("lineEdit_BaseSize", 100))
-    ve = float(world.get("lineEdit_zFactor", 1.5))
+    ve = float(world.get("lineEdit_zFactor", 1.0))
     vs = float(world.get("lineEdit_zShift", 0))
     mapTo3d = MapTo3D(self.dialog.iface.mapCanvas(), bs, ve, vs)
 

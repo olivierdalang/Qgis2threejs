@@ -147,7 +147,7 @@ class ExportSettings:
     # MapTo3D object
     world = properties[ObjectTreeItem.ITEM_WORLD] or {}
     baseSize = world.get("lineEdit_BaseSize", 100)
-    verticalExaggeration = world.get("lineEdit_zFactor", 1.5)
+    verticalExaggeration = world.get("lineEdit_zFactor", 1.0)
     verticalShift = world.get("lineEdit_zShift", 0)
     self.mapTo3d = MapTo3D(canvas, float(baseSize), float(verticalExaggeration), float(verticalShift))
 

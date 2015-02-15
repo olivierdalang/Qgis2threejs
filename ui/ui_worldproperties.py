@@ -137,7 +137,7 @@ class Ui_WorldPropertiesWidget(object):
         self.label_3.setText(_translate("WorldPropertiesWidget", "Base size", None))
         self.lineEdit_BaseSize.setText(_translate("WorldPropertiesWidget", "100", None))
         self.label.setText(_translate("WorldPropertiesWidget", "Vertical exaggeration", None))
-        self.lineEdit_zFactor.setText(_translate("WorldPropertiesWidget", "1.5", None))
+        self.lineEdit_zFactor.setText(_translate("WorldPropertiesWidget", "1.0", None))
         self.label_2.setText(_translate("WorldPropertiesWidget", "Vertical shift", None))
         self.lineEdit_zShift.setText(_translate("WorldPropertiesWidget", "0", None))
         self.groupBox_3.setTitle(_translate("WorldPropertiesWidget", "&Background", None))
