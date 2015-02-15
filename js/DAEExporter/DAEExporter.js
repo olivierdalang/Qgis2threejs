@@ -1,6 +1,6 @@
 /**
- * @author kovacsv / http://kovacsv.hu/
- * @author mrdoob / http://mrdoob.com/
+ * @author olivier dalang / https://github.com/olivierdalang
+ * based on STLExport.js by mrdoob / http://mrdoob.com/
  */
 
  
@@ -37,7 +37,7 @@ THREE.DAEExporter.prototype = {
 
 			var obj_i = 0;
 
-			var already_done_materials = [];
+			var materials_hexstrings = [];
 			output +=  	 '<library_effects>'+ '\n';
 
 			scene.traverse( function ( object ) {
@@ -54,40 +54,40 @@ THREE.DAEExporter.prototype = {
 						var material = object.material;
 						var hexString = material.color.getHexString();
 
-						if( already_done_materials.indexOf(hexString)==-1 ){
+						if( materials_hexstrings.indexOf(hexString)==-1 ){
 
-							already_done_materials.push(hexString);
+							materials_hexstrings.push(hexString);
 
 							output += '	<effect id="effect_'+hexString+'">' + '\n';
 							output += '		<profile_COMMON>' + '\n';
 							output += '			<technique sid="phong1">' + '\n';
 							output += '				<phong>' + '\n';
-							output += '					<emission>' + '\n';
-							output += '						<color>1.0 1.0 1.0 1.0</color>' + '\n';
-							output += '					</emission>' + '\n';
-							output += '					<ambient>' + '\n';
-							output += '						<color>1.0 1.0 1.0 1.0</color>' + '\n';
-							output += '					</ambient>' + '\n';
+							//output += '					<emission>' + '\n';
+							//output += '						<color>1.0 1.0 1.0 1.0</color>' + '\n';
+							//output += '					</emission>' + '\n';
+							//output += '					<ambient>' + '\n';
+							//output += '						<color>1.0 1.0 1.0 1.0</color>' + '\n';
+							//output += '					</ambient>' + '\n';
 							output += '					<diffuse>' + '\n';
 							output += '						<color>'+(material.color.r)+' '+(material.color.g)+' '+(material.color.b)+' 1.0</color>' + '\n';
 							output += '					</diffuse>' + '\n';
-							output += '					<specular>' + '\n';
-							output += '						<color>1.0 1.0 1.0 1.0</color>' + '\n';
-							output += '					</specular>' + '\n';
-							output += '					<shininess>' + '\n';
-							output += '						<float>20.0</float>' + '\n';
-							output += '					</shininess>' + '\n';
-							output += '					<reflective>' + '\n';
-							output += '						<color>1.0 1.0 1.0 1.0</color>' + '\n';
-							output += '					</reflective>' + '\n';
-							output += '					<reflectivity>' + '\n';
-							output += '						<float>0.5</float>' + '\n';
-							output += '					</reflectivity>' + '\n';
-							output += '					<transparent>' + '\n';
-							output += '						<color>1.0 1.0 1.0 1.0</color>' + '\n';
-							output += '					</transparent>' + '\n';
+							//output += '					<specular>' + '\n';
+							//output += '						<color>1.0 1.0 1.0 1.0</color>' + '\n';
+							//output += '					</specular>' + '\n';
+							//output += '					<shininess>' + '\n';
+							//output += '						<float>20.0</float>' + '\n';
+							//output += '					</shininess>' + '\n';
+							//output += '					<reflective>' + '\n';
+							//output += '						<color>1.0 1.0 1.0 1.0</color>' + '\n';
+							//output += '					</reflective>' + '\n';
+							//output += '					<reflectivity>' + '\n';
+							//output += '						<float>0.5</float>' + '\n';
+							//output += '					</reflectivity>' + '\n';
+							//output += '					<transparent>' + '\n';
+							//output += '						<color>1.0 1.0 1.0 1.0</color>' + '\n';
+							//output += '					</transparent>' + '\n';
 							output += '					<transparency>' + '\n';
-							output += '						<float>'+(1.0-material.opacity)+'</float>' + '\n';
+							output += '						<float>'+(material.opacity)+'</float>' + '\n';
 							output += '					</transparency>' + '\n';
 							output += '				</phong>' + '\n';
 							output += '			</technique>' + '\n';
@@ -106,34 +106,14 @@ THREE.DAEExporter.prototype = {
 
 			var obj_i = 0;
 
-			var already_done_materials = [];
 			output +=  	 '<library_materials>'+ '\n';
 
-			scene.traverse( function ( object ) {
-
-				if ( object instanceof THREE.Mesh ) {
-
-					var geometry = object.geometry;
-					var matrixWorld = object.matrixWorld;
-
-					if ( geometry instanceof THREE.Geometry ) {
-
-						obj_i += 1;
-
-						var material = object.material;
-						var hexString = material.color.getHexString();
-
-						if( already_done_materials.indexOf(hexString)==-1 ){
-
-							output += '		<material id="material_'+hexString+'">' + '\n';
-							output += '			<instance_effect url="#effect_'+(material.color.getHexString())+'"/>' + '\n';
-							output += '		</material> ' + '\n';
-
-						}
-
-					}
-				}
-			} );
+			for (var i = 0; i < materials_hexstrings.length; i++) {
+				var hexString = materials_hexstrings[i]
+				output += '		<material id="material_'+hexString+'">' + '\n';
+				output += '			<instance_effect url="#effect_'+(hexString)+'"/>' + '\n';
+				output += '		</material> ' + '\n';
+			};
 
 			output +=  	 '</library_materials>'+ '\n';
 
