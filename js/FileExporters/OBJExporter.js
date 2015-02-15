@@ -65,7 +65,7 @@ THREE.OBJExporter.prototype = {
 
 				}
 
-			} );	
+			} );		
 
 			return output;
 

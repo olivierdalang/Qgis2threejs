@@ -40,7 +40,8 @@ THREE.OBJMaterialExporter.prototype = {
 							materials_hexstrings.push(hexString);
 							output += 'newmtl Mat_' + (hexString) + '\n';
 							output += 'Kd ' + (material.color.r)+' '+(material.color.g)+' '+(material.color.b) + '\n';
-							output += 'Tr ' + (material.opacity) + '\n';
+							output += 'Tr ' + (material.opacity) + '\n';//# some implementations use tr for transparency
+							output += 'd ' + (material.opacity) + '\n';//# some implementations use d for transparency
 
 						}
 
