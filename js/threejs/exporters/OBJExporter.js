@@ -1,80 +1,106 @@
 /**
- * @author kovacsv / http://kovacsv.hu/
  * @author mrdoob / http://mrdoob.com/
  */
- 
+
 THREE.OBJExporter = function () {};
 
 THREE.OBJExporter.prototype = {
 
 	constructor: THREE.OBJExporter,
 
-	parse: ( function ( scene ) {
+	parse: function ( object ) {
 
-			var vector = new THREE.Vector3();
-			var normalMatrixWorld = new THREE.Matrix3();
+		var output = '';
 
-			var output = '';
-			var v_index = 1;
-			var o_index = 1;
+		var indexVertex = 0;
+		var indexVertexUvs = 0
+		var indexNormals = 0;
 
-			scene.traverse( function ( object ) {
+		var parseObject = function ( child ) {
 
-				if ( object instanceof THREE.Mesh ) {
+			var nbVertex = 0;
+			var nbVertexUvs = 0;
+			var nbNormals = 0;
 
-					var geometry = object.geometry;
-					var matrixWorld = object.matrixWorld;
-					
-					var material = object.material;
-					var hexString = material.color.getHexString();
+			var geometry = child.geometry;
 
-					if ( geometry instanceof THREE.Geometry ) {
+			if ( geometry instanceof THREE.Geometry ) {
 
-						output += 'usemtl Mat_' + (hexString) + '\n';
-						output += 'g Object_' + (o_index) + '\n';
-						o_index += 1;
+				output += 'o ' + child.name + '\n';
 
-						var vertices = geometry.vertices;
-						var faces = geometry.faces;
+				for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
 
-						normalMatrixWorld.getNormalMatrix( matrixWorld );
+					var vertex = geometry.vertices[ i ].clone();
+					vertex.applyMatrix4( child.matrixWorld );
 
-						for ( var i = 0, l = faces.length; i < l; i ++ ) {
+					output += 'v ' + vertex.x + ' ' + vertex.y + ' ' + vertex.z + '\n';
 
-							var face = faces[ i ];
+					nbVertex ++;
 
-							vector.copy( face.normal ).applyMatrix3( normalMatrixWorld ).normalize();
+				}
 
-							//output += '\tfacet normal ' + vector.x + ' ' + vector.y + ' ' + vector.z + '\n';
-							//output += '\t\touter loop\n';
+				// uvs
 
-							var indices = [ face.a, face.b, face.c ];
+				for ( var i = 0, l = geometry.faceVertexUvs[ 0 ].length; i < l; i ++ ) {
 
-							for ( var j = 0; j < 3; j ++ ) {
+					var vertexUvs = geometry.faceVertexUvs[ 0 ][ i ];
 
-								vector.copy( vertices[ indices[ j ] ] ).applyMatrix4( matrixWorld );
+					for ( var j = 0; j < vertexUvs.length; j ++ ) {
 
-								output += 'v ' + vector.x + ' ' + vector.z + ' ' + vector.y + '\n';
+						var uv = vertexUvs[ j ];
+						vertex.applyMatrix4( child.matrixWorld );
 
-							}
-							output += 'f ' + (v_index+2) + ' ' + (v_index+1) + ' ' + (v_index) + '\n';
-							v_index += 3;
+						output += 'vt ' + uv.x + ' ' + uv.y + '\n';
 
-							//output += '\t\tendloop\n';
-							//output += '\tendfacet\n';
-
-						}
+						nbVertexUvs ++;
 
 					}
 
 				}
 
-			} );
+				// normals
 
-			//output += 'endsolid exported\n';			
+				for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 
-			return output;
+					var normals = geometry.faces[ i ].vertexNormals;
 
-		} )
+					for ( var j = 0; j < normals.length; j ++ ) {
+
+						var normal = normals[ j ];
+						output += 'vn ' + normal.x + ' ' + normal.y + ' ' + normal.z + '\n';
+
+						nbNormals ++;
+
+					}
+
+				}
+
+				// faces
+
+				for ( var i = 0, j = 1, l = geometry.faces.length; i < l; i ++, j += 3 ) {
+
+					var face = geometry.faces[ i ];
+
+					output += 'f ';
+					output += ( indexVertex + face.a + 1 ) + '/' + ( indexVertexUvs + j ) + '/' + ( indexNormals + j ) + ' ';
+					output += ( indexVertex + face.b + 1 ) + '/' + ( indexVertexUvs + j + 1 ) + '/' + ( indexNormals + j + 1 ) + ' ';
+					output += ( indexVertex + face.c + 1 ) + '/' + ( indexVertexUvs + j + 2 ) + '/' + ( indexNormals + j + 2 ) + '\n';
+
+				}
+
+			}
+
+			// update index
+			indexVertex += nbVertex;
+			indexVertexUvs += nbVertexUvs;
+			indexNormals += nbNormals;
+
+		};
+
+		object.traverse( parseObject );
+
+		return output;
+
+	}
 
 };

@@ -9,10 +9,12 @@ THREE.STLExporter.prototype = {
 
 	constructor: THREE.STLExporter,
 
-	parse: ( function ( scene ) {
+	parse: ( function () {
 
-			var vector = new THREE.Vector3();
-			var normalMatrixWorld = new THREE.Matrix3();
+		var vector = new THREE.Vector3();
+		var normalMatrixWorld = new THREE.Matrix3();
+
+		return function ( scene ) {
 
 			var output = '';
 
@@ -62,10 +64,12 @@ THREE.STLExporter.prototype = {
 
 			} );
 
-			output += 'endsolid exported\n';			
+			output += 'endsolid exported\n';
 
 			return output;
 
-		} )
+		};
+
+	}() )
 
 };

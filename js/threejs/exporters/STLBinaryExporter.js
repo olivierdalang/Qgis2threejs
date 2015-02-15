@@ -10,10 +10,12 @@ THREE.STLBinaryExporter.prototype = {
 
 	constructor: THREE.STLBinaryExporter,
 
-	parse: ( function ( scene ) {
+	parse: ( function () {
 
-			var vector = new THREE.Vector3();
-			var normalMatrixWorld = new THREE.Matrix3();
+		var vector = new THREE.Vector3();
+		var normalMatrixWorld = new THREE.Matrix3();
+
+		return function ( scene ) {
 
 			var triangles = 0;
 			scene.traverse( function ( object ) {
@@ -67,9 +69,12 @@ THREE.STLBinaryExporter.prototype = {
 				}
 
 			} );
+			
+			//return output;
+			return output.buffer; // Qgis2threegis : we return the buffer directly so that this exporter can be used the same way than the others in the calling code
 
-			return output.buffer;
+		};
 
-		} )
+	}() )
 
 };
